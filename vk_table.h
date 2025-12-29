@@ -10,7 +10,7 @@ class output
         size_t output_len;
     public:
         output(std::vector<int> values_= {}, const size_t input_len_=0, const size_t output_len_=0)
-            : values(std::move(values_)), input_len(input_len_), output_len(output_len){};
+            : values(std::move(values_)), input_len(input_len_), output_len(output_len_){};
         ~output(){values = {};};
 
         void print_truth();

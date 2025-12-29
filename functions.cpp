@@ -65,9 +65,24 @@ void output::print_truth()
 
     if(this->input_len == 0)
     {
-        size_t x = this->values.size();
-        this->input_len = this->to_binary(this->values.size() - 1).size();
+        size_t size_in_bits = output::to_binary(this->values.size() - 1).size();
+
+        this->input_len = size_in_bits;
     }
+    if(this->output_len == 0)
+    {
+        size_t maximum_element = this->values.front();
+
+        for(size_t i = 1; i < this->values.size(); i ++)
+        {
+            if(this->values.at(i) > maximum_element)
+            {
+                maximum_element = this->values.at(i);
+            }
+        }
+        this->output_len = output::to_binary(maximum_element).size();
+    }
+
     //The "input" is going to be i, while the "output" is going to be values(i).
     for(size_t i = 0; i < this->values.size(); i ++)
     {
@@ -79,15 +94,23 @@ void output::print_truth()
         temp = this->to_binary(this->values.at(i));
 
         //Reset binary before placing temp
-        binary.replace(0, this->input_len, "0");
-        
-        binary.replace(this->input_len - temp.size(), temp.size(), temp);
+        binary.clear();
+        binary.insert(binary.begin(), this->output_len, '0');
+
+        binary.replace(this->output_len - temp.size(), temp.size(), temp);
         std::cout << binary << std::endl;
     }
 }
 
 void output::read()
 {
+    if(!this->values.empty())
+    {
+        this->values.clear();
+        this->input_len = 0;
+        this->output_len = 0;
+    }
+    
     std::string line;
     bool is_binary = 1;
 

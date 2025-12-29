@@ -2,12 +2,11 @@
 
 int main()
 {
-    output x({0, 1, 1, 0});
+    output x({0, 1, 1, 0, 0});
 
     x.print_truth();
 
-    output y;
-    y.read();
-    y.print_truth();
+    x.read();
+    x.print_truth();
     return 0;
 }
