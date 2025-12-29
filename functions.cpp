@@ -104,29 +104,24 @@ void output::print_truth()
         return ;
     }
 
-    if(this->input_len == 0)
+    int x = this->min_input_len();
+    if(x == -1)
     {
-        int x = this->min_input_len();
-        if(x == -1)
-        {
-            return;
-        }
-        if(x > this->input_len)
-        {
-            this->input_len = x;
-        }
+        return;
     }
-    if(this->output_len == 0)
+    if(x > this->input_len)
     {
-        int x = this->min_output_len();
-        if(x == -1)
-        {
-            return;
-        }
-        if(x > this->output_len)
-        {
-            this->output_len = x;
-        }
+        this->input_len = x;
+    }
+
+    x = this->min_output_len();
+    if(x == -1)
+    {
+        return;
+    }
+    if(x > this->output_len)
+    {
+        this->output_len = x;
     }
 
     //The "input" is going to be i, while the "output" is going to be values(i).
