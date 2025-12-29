@@ -65,24 +65,23 @@ const int& output::operator[](const size_t i) const
     return this->values.at(i);
 }
 
-int output::max_input_len()
+int output::min_input_len()
 {
     if(this->values.empty())
     {
-        std::cout << "called max_input_len() on empty vector" << std::endl;
+        std::cout << "[warning]: called min_input_len() on empty vector" << std::endl;
         return -1;
     }
 
     size_t size_in_bits = output::to_binary(this->values.size() - 1).size();
-    this->input_len = size_in_bits;
-    return 0;
+    return size_in_bits;
 }
 
-int output::max_output_len()
+int output::min_output_len()
 {
     if(this->values.empty())
     {
-        std::cout << "called max_output_len() on empty vector." << std::endl;
+        std::cout << "[warning]: called min_output_len() on empty vector." << std::endl;
         return -1;
     }
 
@@ -95,8 +94,7 @@ int output::max_output_len()
             maximum_element = this->values.at(i);
         }
     }
-    this->output_len = output::to_binary(maximum_element).size();
-    return 0;
+    return output::to_binary(maximum_element).size();
 }
 
 void output::print_truth()
@@ -108,18 +106,26 @@ void output::print_truth()
 
     if(this->input_len == 0)
     {
-        int x = this->max_input_len();
+        int x = this->min_input_len();
         if(x == -1)
         {
             return;
         }
+        if(x > this->input_len)
+        {
+            this->input_len = x;
+        }
     }
     if(this->output_len == 0)
     {
-        int x = this->max_output_len();
+        int x = this->min_output_len();
         if(x == -1)
         {
             return;
+        }
+        if(x > this->output_len)
+        {
+            this->output_len = x;
         }
     }
 
@@ -196,6 +202,79 @@ void output::read()
 void output::init(std::vector<int> (*foo)())
 {
     std::vector<int> temp = foo();
+
+    if(temp.empty())
+    {
+        std::cout << "[warning]: the vector provided is empty. Do you wish to proceed with the assignment? [y/n]: ";
+        char option;
+        std::cin >> option;
+
+        if(option == 'n' || option == 'N')
+        {
+            std::cout << "Assignment will not procceed: User entered 'n'." << std::endl;
+            return ;
+        }
+        else if(option != 'y' && option != 'Y')
+        {
+            std::cout << "Assignment will not proceed: User entered invalid character: '" << option << "'." << std::endl;
+            return ;
+        }
+    }
+    
+    bool is_binary = true;
+    
+    for(size_t i = 0; i < temp.size(); i ++)
+    {
+        if(temp.at(i) < 0)
+        {
+            std::cout << "[fatal]: negative number [" << temp.at(i) << "] found at position " << i << ".";
+            std::cout << std::endl;
+            std::cout << "         assignment failed: only introduce positive values." << std::endl;
+            return;
+        }
+        std::string number = std::to_string(temp.at(i));
+        for(size_t j = 2; j < 10; j ++)
+        {
+            if(number.find(char(j + '0')) != std::string::npos)
+            {
+                is_binary = false;
+            }
+        }
+    }
+
+    if(is_binary)
+    {
+        std::cout << "[warning]: values appear to be binary. Would you like to store them as binary numbers? [y/n]: ";
+        char option;
+        std::cin >> option;
+
+        switch(option)
+        {
+            case 'n':
+            case 'N':
+                std::cout << "Values will be stored as ints." << std::endl;
+                this->values = temp;
+                return;
+            case 'y':
+            case 'Y':
+                std::cout << "Values will be treated as binary numbers." << std::endl;
+                for(size_t i = 0; i < temp.size(); i ++)
+                {
+                    temp.at(i) = output::to_dec(std::to_string(temp.at(i)));
+                }
+                this->values = temp;
+                return;
+            default:
+                std::cout << "Invalid option entered: [" << option << "]." << std::endl;
+                return;
+        }
+    }
+
+    this->values = temp;
+} 
+
+void output::init(std::vector<int> temp)
+{
 
     if(temp.empty())
     {

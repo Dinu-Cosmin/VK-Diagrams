@@ -13,7 +13,7 @@ int main()
 {
     output x;
 
-    x.init(create_output);
+    x.init({100, -101, 110, 111, 1000});
     x.print_truth();
     char numbers[] = "aa1a1aa01ab";
     std::cout << output::to_dec(numbers) << std::endl;
