@@ -33,12 +33,21 @@ size_t output::to_dec(std::string binary)
     size_t dec = 0;
     size_t pos = 0;
 
-    for(auto it = binary.rbegin(); it != binary.rend(); ++it, pos++)
+    for(auto it = binary.rbegin(); it != binary.rend(); ++it)
     {
-        if(*it == '1')
+        if(*it != '1' && *it != '0')
         {
-            dec += 1 << pos;
+            binary.replace(binary.size() - pos, 1, "");
         }
+        else
+        {
+            if(*it == '1')
+            {
+                dec += 1 << pos;
+            }         
+            pos ++;   
+        }
+
     }
 
     return dec;

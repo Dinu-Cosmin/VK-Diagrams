@@ -15,6 +15,8 @@ int main()
 
     x.init(create_output);
     x.print_truth();
+    char numbers[] = "aa1a1aa01ab";
+    std::cout << output::to_dec(numbers) << std::endl;
 
     return 0;
 }
